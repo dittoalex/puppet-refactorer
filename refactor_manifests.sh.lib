@@ -1,0 +1,43 @@
+function pre()
+{
+    echo "## ${@}"
+}
+function resource_report()
+{
+# given $1 as local pre-formatted report, print shiny things
+resources_by_type ${1}
+resources_by_module ${1}
+resources_by_file ${1}
+resources_by_line ${1}
+}
+
+function resources_by_type()
+{
+        pre "Resources by type"
+        awk '{print $1}' ${1} | sort | uniq -c | sort -n
+}
+function resources_by_line()
+{
+ pre "Resources by line"
+         awk '{print $NF}' ${1} | sort | uniq -c | sort -n
+}
+function resources_by_module()
+{
+pre "Resources by module"
+awk '{print $NF}' ${1} | cut -d/ -f5 | sort | uniq -c | sort -n
+}
+
+function resources_by_file()
+{
+ pre "Resources by file"
+         awk '{print $NF}' ${1} | cut -d: -f1 | sort | uniq -c | sort -n
+}
+function resource_by_file_loop()
+{
+while :; do
+date
+resources_by_file ${1}
+sleep 1
+done
+}
+
